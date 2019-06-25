@@ -8,8 +8,7 @@ import sys
 # installed with pip
 import pandas as pd
 
-# Create dataframe from file
-filepath = '1fdinspi.csv'
+# Create dataframe from files
 colnames = [
     "county", "licnum", "sitename", "streetaddy", "cityaddy", "zip",
     "inspnum", "insptype", "inspdispos", "inspdate", "totalvio", "highvio",
@@ -24,12 +23,59 @@ colnums = [
     28, 29, 30, 32, 33, 37, 43, 48, 49, 50, 52, 56, 62, 71, 73, 74, 80, 81
     ]
 
-dist1_df = pd.read_csv(
-    filepath,
+filepath1 = '1fdinspi.csv'
+filepath2 = '2fdinspi.csv'
+filepath3 = '3fdinspi.csv'
+filepath4 = '4fdinspi.csv'
+filepath5 = '5fdinspi.csv'
+filepath6 = '6fdinspi.csv'
+
+df1 = pd.read_csv(
+    filepath1,
     names=colnames,
     usecols=colnums,
     dtype=object,
     encoding="ISO-8859-1"
     )
 
-dist1_df.head()
+df2 = pd.read_csv(
+    filepath2,
+    names=colnames,
+    usecols=colnums,
+    dtype=object,
+    encoding="ISO-8859-1"
+    )
+
+df3 = pd.read_csv(
+    filepath3,
+    names=colnames,
+    usecols=colnums,
+    dtype=object,
+    encoding="ISO-8859-1"
+    )
+
+df4 = pd.read_csv(
+    filepath4,
+    names=colnames,
+    usecols=colnums,
+    dtype=object,
+    encoding="ISO-8859-1"
+    )
+
+df5 = pd.read_csv(
+    filepath5,
+    names=colnames,
+    usecols=colnums,
+    dtype=object,
+    encoding="ISO-8859-1"
+    )
+
+df6 = pd.read_csv(
+    filepath6,
+    names=colnames,
+    usecols=colnums,
+    dtype=object,
+    encoding="ISO-8859-1"
+    )
+
+df_all = pd.concat([df1, df2, df3, df4, df5, df6], ignore_index=True)
