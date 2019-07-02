@@ -4,7 +4,13 @@ So far, the files here are:
 
 • districtlook.py -- Puts the csv data into a Pandas dataframe for analysis.
 
-• /1-7/fdinspi.csv -- Summary inspection date from Districts 1-7 in fiscal year 2018-2019 through June 21, 2019.
+• fy2016 -- directory of inspection data in FY2016-17
+
+• fy2017 -- directory of inspection data in FY2017-18
+
+• fy2018 -- directory of inspection data in FY2018-19
+
+• counties.txt -- list of all counties in Florida
 
 The csv files have more than 80 columns. Here is a key to described the columns:
 
