@@ -1,4 +1,3 @@
-# built-in libraries
 import csv
 import datetime
 import os.path
@@ -24,11 +23,11 @@ colnums = [
     ]
 
 filepath18_1 = 'fy2018/1fdinspi_1819.csv'
-filepath18_2 = 'fy2018/1fdinspi_1819.csv'
-filepath18_3 = 'fy2018/1fdinspi_1819.csv'
-filepath18_4 = 'fy2018/1fdinspi_1819.csv'
-filepath18_5 = 'fy2018/1fdinspi_1819.csv'
-filepath18_6 = 'fy2018/1fdinspi_1819.csv'
+filepath18_2 = 'fy2018/2fdinspi_1819.csv'
+filepath18_3 = 'fy2018/3fdinspi_1819.csv'
+filepath18_4 = 'fy2018/4fdinspi_1819.csv'
+filepath18_5 = 'fy2018/5fdinspi_1819.csv'
+filepath18_6 = 'fy2018/6fdinspi_1819.csv'
 
 df18_1 = pd.read_csv(
     filepath18_1,
@@ -79,3 +78,14 @@ df18_6 = pd.read_csv(
     )
 
 df18_all = pd.concat([df18_1, df18_2, df18_3, df18_4, df18_5, df18_6], ignore_index=True)
+
+# Which counties are included
+dict_counties = df18_all.groupby(['county']).groups.keys()
+
+with open('counties.txt', 'r') as f:
+    fl_counties = [line.rstrip('\n') for line in f]
+
+dict_counties = {i : 5 for i in fl_counties}
+
+for key in dict_counties.keys() & fl_counties.keys():
+    print(fl_counties[key])
