@@ -1,3 +1,4 @@
+# built-in libraries
 import csv
 import datetime
 import os.path
@@ -77,15 +78,31 @@ df18_6 = pd.read_csv(
     encoding="ISO-8859-1"
     )
 
-df18_all = pd.concat([df18_1, df18_2, df18_3, df18_4, df18_5, df18_6], ignore_index=True)
+df18_all = pd.concat(
+    [df18_1, df18_2, df18_3, df18_4, df18_5, df18_6], ignore_index=True
+    )
+
+# START OUR ANALYSIS
+
+# How many counties are included in the dataframe
+co_count = len(list(df18_all.groupby(['county']).groups.keys()))
+
+print("There are " + str(co_count) + " counties in our dataframe.\n")
 
 # Which counties are included
-dict_counties = df18_all.groupby(['county']).groups.keys()
+co_inc = list(df18_all.groupby(['county']).groups.keys())
+print("These counties are: " + str(', '.join(co_inc)) + "\n")
 
+#List of all Florida counties
 with open('counties.txt', 'r') as f:
     fl_counties = [line.rstrip('\n') for line in f]
 
-dict_counties = {i : 5 for i in fl_counties}
+def diff(co_inc, fl_counties):
+    co_dif = [i for i in co_inc + fl_counties if i not in co_inc]
+    return co_dif
 
-for key in dict_counties.keys() & fl_counties.keys():
-    print(fl_counties[key])
+missing_counties = diff(co_inc, fl_counties)
+
+print("The ones not included are: " + str(', '.join(missing_counties)))
+
+""" WHY ARE WE MISSING SOME?? """
