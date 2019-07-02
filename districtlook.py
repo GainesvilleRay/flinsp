@@ -23,59 +23,59 @@ colnums = [
     28, 29, 30, 32, 33, 37, 43, 48, 49, 50, 52, 56, 62, 71, 73, 74, 80, 81
     ]
 
-filepath1 = '1fdinspi.csv'
-filepath2 = '2fdinspi.csv'
-filepath3 = '3fdinspi.csv'
-filepath4 = '4fdinspi.csv'
-filepath5 = '5fdinspi.csv'
-filepath6 = '6fdinspi.csv'
+filepath18_1 = 'fy2018/1fdinspi_1819.csv'
+filepath18_2 = 'fy2018/1fdinspi_1819.csv'
+filepath18_3 = 'fy2018/1fdinspi_1819.csv'
+filepath18_4 = 'fy2018/1fdinspi_1819.csv'
+filepath18_5 = 'fy2018/1fdinspi_1819.csv'
+filepath18_6 = 'fy2018/1fdinspi_1819.csv'
 
-df1 = pd.read_csv(
-    filepath1,
+df18_1 = pd.read_csv(
+    filepath18_1,
     names=colnames,
     usecols=colnums,
     dtype=object,
     encoding="ISO-8859-1"
     )
 
-df2 = pd.read_csv(
-    filepath2,
+df18_2 = pd.read_csv(
+    filepath18_2,
     names=colnames,
     usecols=colnums,
     dtype=object,
     encoding="ISO-8859-1"
     )
 
-df3 = pd.read_csv(
-    filepath3,
+df18_3 = pd.read_csv(
+    filepath18_3,
     names=colnames,
     usecols=colnums,
     dtype=object,
     encoding="ISO-8859-1"
     )
 
-df4 = pd.read_csv(
-    filepath4,
+df18_4 = pd.read_csv(
+    filepath18_4,
     names=colnames,
     usecols=colnums,
     dtype=object,
     encoding="ISO-8859-1"
     )
 
-df5 = pd.read_csv(
-    filepath5,
+df18_5 = pd.read_csv(
+    filepath18_5,
     names=colnames,
     usecols=colnums,
     dtype=object,
     encoding="ISO-8859-1"
     )
 
-df6 = pd.read_csv(
-    filepath6,
+df18_6 = pd.read_csv(
+    filepath18_6,
     names=colnames,
     usecols=colnums,
     dtype=object,
     encoding="ISO-8859-1"
     )
 
-df_all = pd.concat([df1, df2, df3, df4, df5, df6], ignore_index=True)
+df18_all = pd.concat([df18_1, df18_2, df18_3, df18_4, df18_5, df18_6], ignore_index=True)
