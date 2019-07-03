@@ -29,12 +29,12 @@ filepath18_3 = 'fy2018/3fdinspi_1819.csv'
 filepath18_4 = 'fy2018/4fdinspi_1819.csv'
 filepath18_5 = 'fy2018/5fdinspi_1819.csv'
 filepath18_6 = 'fy2018/6fdinspi_1819.csv'
+filepath18_7 = 'fy2018/7fdinspi_1819.csv'
 
 df18_1 = pd.read_csv(
     filepath18_1,
     names=colnames,
     usecols=colnums,
-    dtype=object,
     encoding="ISO-8859-1"
     )
 
@@ -42,7 +42,6 @@ df18_2 = pd.read_csv(
     filepath18_2,
     names=colnames,
     usecols=colnums,
-    dtype=object,
     encoding="ISO-8859-1"
     )
 
@@ -50,7 +49,6 @@ df18_3 = pd.read_csv(
     filepath18_3,
     names=colnames,
     usecols=colnums,
-    dtype=object,
     encoding="ISO-8859-1"
     )
 
@@ -58,7 +56,6 @@ df18_4 = pd.read_csv(
     filepath18_4,
     names=colnames,
     usecols=colnums,
-    dtype=object,
     encoding="ISO-8859-1"
     )
 
@@ -66,7 +63,6 @@ df18_5 = pd.read_csv(
     filepath18_5,
     names=colnames,
     usecols=colnums,
-    dtype=object,
     encoding="ISO-8859-1"
     )
 
@@ -74,15 +70,23 @@ df18_6 = pd.read_csv(
     filepath18_6,
     names=colnames,
     usecols=colnums,
-    dtype=object,
+    encoding="ISO-8859-1"
+    )
+
+df18_7 = pd.read_csv(
+    filepath18_7,
+    names=colnames,
+    usecols=colnums,
     encoding="ISO-8859-1"
     )
 
 df18_all = pd.concat(
-    [df18_1, df18_2, df18_3, df18_4, df18_5, df18_6], ignore_index=True
+    [df18_1, df18_2, df18_3, df18_4, df18_5, df18_6, df18_7], ignore_index=True
     )
 
 # START OUR ANALYSIS
+
+# Test to see all counties in Florida are included in our dataframe.
 
 # How many counties are included in the dataframe
 co_count = len(list(df18_all.groupby(['county']).groups.keys()))
@@ -104,5 +108,33 @@ def diff(co_inc, fl_counties):
 missing_counties = diff(co_inc, fl_counties)
 
 print("The ones not included are: " + str(', '.join(missing_counties)))
+print("But it's listed simply as Dade.")
 
-""" WHY ARE WE MISSING SOME?? """
+# What was worst restaurant inspection in Florida for the year?
+# The most total violations:
+most_vios = df18_all.loc[df18_all['totalvio'].idxmax()]
+print('\nThe restaurant with the most total violations last year was:')
+print(most_vios.iloc[2] + ", " + most_vios.iloc[3] + ", " + most_vios.iloc[4] +
+      ", in " + most_vios.iloc[0] + " County, on " + most_vios.iloc[9] + ".")
+print("It had " + str(most_vios.iloc[10]) + " total violations, including " + str(most_vios.iloc[11]) +
+     " high violations, " + str(most_vios.iloc[12]) + " intermediate violations, and " +
+     str(most_vios.iloc[13]) + " basic violations.")
+
+# The most 'high' violations:
+most_high_vios = df18_all.loc[df18_all['highvio'].idxmax()]
+print('\nThe restaurant with the most "high" violations last year was:')
+print(most_high_vios.iloc[2] + ", " + most_high_vios.iloc[3] + ", " + most_high_vios.iloc[4] +
+      ", in " + most_high_vios.iloc[0] + " County, on " + most_high_vios.iloc[9] + ".")
+print("It had " + str(most_high_vios.iloc[10]) + " total violations, including " + str(most_high_vios.iloc[11]) +
+     " high violations, " + str(most_high_vios.iloc[12]) + " intermediate violations, and " +
+     str(most_high_vios.iloc[13]) + " basic violations.")
+
+# What is the mean of total violations?
+# What is the mean of high violations?
+# What is the most common violation?
+# Which county has the highest mean for total violations?
+# Which county has the highest mean for high violations?
+# Which county has the lowest mean for total violations?
+# Which county has the lowest mean for high violations?
+# Which county has the most inspections per licensed restaurant? (Need data on licensed restaurants)
+# Which county has the lowest inspections per licensed restaurant?
