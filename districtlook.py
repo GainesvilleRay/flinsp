@@ -110,24 +110,33 @@ missing_counties = diff(co_inc, fl_counties)
 print("The ones not included are: " + str(', '.join(missing_counties)))
 print("But it's listed simply as Dade.")
 
+# How many different restaurants were inspected?
+insp_count = len(pd.value_counts(df18_all['licnum'].values, sort=False))
+print("\nThere were " + str(insp_count) +
+    " restaurants inspected during this fiscal year.")
+
 # What was worst restaurant inspection in Florida for the year?
 # The most total violations:
 most_vios = df18_all.loc[df18_all['totalvio'].idxmax()]
 print('\nThe restaurant with the most total violations last year was:')
 print(most_vios.iloc[2] + ", " + most_vios.iloc[3] + ", " + most_vios.iloc[4] +
       ", in " + most_vios.iloc[0] + " County, on " + most_vios.iloc[9] + ".")
-print("It had " + str(most_vios.iloc[10]) + " total violations, including " + str(most_vios.iloc[11]) +
-     " high violations, " + str(most_vios.iloc[12]) + " intermediate violations, and " +
-     str(most_vios.iloc[13]) + " basic violations.")
+print("It had " + str(most_vios.iloc[10]) + " total violations, including " +
+    str(most_vios.iloc[11]) + " high violations, " + str(most_vios.iloc[12]) +
+    " intermediate violations, and " +
+    str(most_vios.iloc[13]) + " basic violations.")
 
 # The most 'high' violations:
 most_high_vios = df18_all.loc[df18_all['highvio'].idxmax()]
 print('\nThe restaurant with the most "high" violations last year was:')
-print(most_high_vios.iloc[2] + ", " + most_high_vios.iloc[3] + ", " + most_high_vios.iloc[4] +
-      ", in " + most_high_vios.iloc[0] + " County, on " + most_high_vios.iloc[9] + ".")
-print("It had " + str(most_high_vios.iloc[10]) + " total violations, including " + str(most_high_vios.iloc[11]) +
-     " high violations, " + str(most_high_vios.iloc[12]) + " intermediate violations, and " +
-     str(most_high_vios.iloc[13]) + " basic violations.")
+print(most_high_vios.iloc[2] + ", " + most_high_vios.iloc[3] + ", " +
+    most_high_vios.iloc[4] + ", in " + most_high_vios.iloc[0] + " County, on " +
+    most_high_vios.iloc[9] + ".")
+print("It had " + str(most_high_vios.iloc[10]) +
+    " total violations, including " + str(most_high_vios.iloc[11]) +
+    " high violations, " + str(most_high_vios.iloc[12]) +
+    " intermediate violations, and " + str(most_high_vios.iloc[13]) +
+    " basic violations.")
 
 # What is the mean of total violations?
 # What is the mean of high violations?
@@ -136,5 +145,6 @@ print("It had " + str(most_high_vios.iloc[10]) + " total violations, including "
 # Which county has the highest mean for high violations?
 # Which county has the lowest mean for total violations?
 # Which county has the lowest mean for high violations?
-# Which county has the most inspections per licensed restaurant? (Need data on licensed restaurants)
+# Which county has the most inspections per licensed restaurant?
+# (Need data on licensed restaurants)
 # Which county has the lowest inspections per licensed restaurant?
