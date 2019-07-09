@@ -163,3 +163,25 @@ print("\nThe statewide mean for high violations is " + str(mean_total_vios))
 # Which county has the most inspections per licensed restaurant?
 # (Need data on licensed restaurants)
 # Which county has the lowest inspections per licensed restaurant?
+
+# WAIT // THIS ISN'T RIGHT. I DIVIDED TOTAL VIOLATIONS BY NUMBER OF RESTAURANT
+# SHOULD HAVE BEEN BY NUMBER OF INSPECTIONS??
+
+# Which county has the highest mean for total violations?
+df18_totalvios = df18_all[['county', 'totalvio']]
+df18_totalvios = df18_totalvios.set_index('county')
+df18_totalvios = df18_totalvios.groupby('county').count()
+df18_totalvios = pd.concat([df18_totalvios, dfcount], axis=1, sort=True)
+df18_totalvios['avg'] = df18_totalvios['totalvio'] / df18_totalvios['count']
+df18_totalvios['mean'] = df18_totalvios.avg.mean()
+df18_totalvios['std'] = df18_totalvios.avg.std()
+df18_totalvios['outlier'] = df18_totalvios['std'] + df18_totalvios['mean'] - df18_totalvios['avg']
+df18_totalvios_outliers = df18_totalvios[df18_totalvios.outlier < 0]
+df18_totalvios = df18_totalvios.sort_values(by=['avg'], ascending=False)
+df18_totalvios_outliers = df18_totalvios[df18_totalvios.outlier < 0]
+total_outliers = list(df18_totalvios_outliers.index.values)
+# These are ranked counties above one standard deviation from the mean:
+print('\nThe counties as outliers for the most total violations are:' +
+      str(total_outliers
+
+df18_totalvios = df18_all[['county', 'totalvio', 'visitid']]
