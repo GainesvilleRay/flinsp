@@ -111,6 +111,78 @@ missing_counties = diff(co_inc, fl_counties)
 print("The ones not included are: " + str(', '.join(missing_counties)))
 print("But it's listed simply as Dade.")
 
+# Which counties have the most & least violations?
+# Rather than simply sum them, we'll do this by finding the mean
+# for each county, and then seeing which are at least one standard
+# deviation away from the mean.
+
+# Mean violations grouped by county
+dfcm = df18_all.groupby('county').mean()
+
+# Looking at total violations
+print("\nLet's look at TOTAL VIOLATIONS per county!")
+dfcmt = dfcm[['totalvio']]
+dfcmt = dfcmt.sort_values(by=['totalvio'], axis=0, ascending=False)
+dfcmt_mean = round(float(dfcmt.mean()),2) # rounded to two places
+print("\nThe mean of total violations when grouped by county is: " +
+      str(dfcmt_mean))
+# Standard deviation from the grouped mean of total violations
+dfcmt_std = round(float(dfcmt.std()),2) # rounded to two places
+print("\nThe standard deviation from the mean for total violations grouped by county is: " +
+      str(dfcmt_std))
+
+# Let's look at the bad badoutliers
+dfcmtob = dfcmt
+dfcmtob = dfcmtob.sort_values(by=['totalvio'], axis=0, ascending=False)
+tot_bad_outlier = dfcmtob['totalvio'] > 6.81
+dfcmtob = dfcmtob[tot_bad_outlier]
+dfcmtob = dfcmtob.round(2)
+print("\nHere are the 'bad' outliers, those with total violations above 1 standard deviation:")
+print(dfcmtob)
+
+# Let's look at the good outliers
+dfcmtog = dfcmt
+dfcmtog = dfcmtog.sort_values(by=['totalvio'], axis=0, ascending=True)
+tot_good_outlier = dfcmtog['totalvio'] < 3.97
+dfcmtog = dfcmtog[tot_good_outlier]
+dfcmtog = dfcmtog.round(2)
+print("\nHere are the 'good' outliers, those with total violations below 1 standard deviation:")
+print(dfcmtog)
+
+# Looking at 'high' violations
+print("\nLet's look at HIGH VIOLATIONS per county!")
+
+dfcmh = dfcm[['highvio']]
+dfcmh = dfcmh.sort_values(by=['highvio'], axis=0, ascending=False)
+dfcmh_mean = round(float(dfcmh.mean()),2) # rounded to two places
+print("\nThe mean of high violations when grouped by county is: " +
+      str(dfcmh_mean))
+# Standard deviation from the grouped mean of total violations
+dfcmh_std = round(float(dfcmh.std()),2) # rounded to two places
+print("\nThe standard deviation from the mean for high violations grouped by county is: " +
+      str(dfcmh_std))
+
+# Let's look at the bad outliers
+dfcmhob = dfcmh
+dfcmhob = dfcmhob.sort_values(by=['highvio'], axis=0, ascending=False)
+high_bad_outlier = dfcmhob['highvio'] > 1.26
+dfcmhob = dfcmhob[high_bad_outlier]
+dfcmhob = dfcmhob.round(2)
+print("\nHere are the 'bad' outliers, those with total violations above 1 standard deviation:")
+print(dfcmhob)
+
+# Let's look at the good outliers
+dfcmhog = dfcmh
+dfcmhog = dfcmhog.sort_values(by=['highvio'], axis=0, ascending=True)
+high_good_outlier = dfcmhog['highvio'] < .66
+dfcmhog = dfcmhog[high_good_outlier]
+dfcmhog = dfcmhog.round(2)
+print("\nHere are the 'good' outliers, those with total violations below 1 standard deviation:")
+print(dfcmhog)
+
+# Let's look at the worst individual restaurants in the state
+print("\nLet's look at the worst individual restaurants in the state.")
+
 # What was worst restaurant inspection in Florida for the year?
 # The most total violations:
 most_vios = df18_all.loc[df18_all['totalvio'].idxmax()]
@@ -134,47 +206,28 @@ print("It had " + str(most_high_vios.iloc[10]) + " total violations, including "
 mean_total_vios = round(df18_all['totalvio'].mean(),2) # rounded to two places
 print("\nThe mean of total violations per inspection statewide is: " +
       str(mean_total_vios))
+std_total_vios = round(df18_all['totalvio'].std(),2)
+print("\nThe standard deviation of total violations per inspection statewide is: " +
+      str(std_total_vios))
+print("(So there won't be any below 1 std!)")
 
 # What is the mean of high violations statewide?
 mean_high_vios = round(df18_all['highvio'].mean(),2) # rounded to two places
 print("\nThe mean of high violations per inspection statewide is: " +
       str(mean_high_vios))
+std_high_vios = round(df18_all['highvio'].std(),2) # rounded to two places
+print("\nThe standard deviation of high violations per inspection statewide is: " +
+      str(std_high_vios))
+print("(So there won't be any below 1 std!)")
 
-# Which counties have the most & least violations?
-# Rather than simply sum them, we'll do this by finding the mean
-# for each county, and then seeing which are at least one standard
-# deviation away from the mean.
+worst_high_outliers = dfsh['highvio'] > 12
+dfsh = dfsh[worst_high_outliers]
+dfsh = dfsh.sort_values(by=['highvio'], axis=0, ascending=False)
+print("\nHere are the 'bad' outliers, those with high violations above 1 standard deviation:")
+dfsh
 
-# Mean violations grouped by county
-dfcm = df18_all.groupby('county').mean()
-
-# Looking at total violations
-dfcmt = dfcm[['totalvio']]
-dfcmt = dfcmt.sort_values(by=['totalvio'], axis=0, ascending=False)
-dfcmt_mean = round(float(dfcmt.mean()),2) # rounded to two places
-print("\nThe mean of total violations when grouped by county is: " +
-      str(dfcmt_mean))
-# Standard deviation from the grouped mean of total violations
-dfcmt_std = round(float(dfcmt.std()),2) # rounded to two places
-print("\nThe standard deviation from the mean for total violations grouped by county is: " +
-      str(dfcmt_std))
-
-"""
-# Looking at outliers: those a standard deviation from the mean
-# https://www.quora.com/How-do-I-subtract-the-mean-of-a-row-from-each-element-of-the-row-in-a-data-frame-in-Python-data-handling
-dfcmto = dfcmt.sub(dfcmt.mean(axis=1), axis=0)
-dfcmto = dfcmto.sort_values(by=['totalvio'], axis=0, ascending=True)
-dfcmto
-
-"""
-
-
-# What is the mean of total violations?
-# What is the mean of high violations?
 # What is the most common violation?
-# Which county has the highest mean for total violations?
-# Which county has the highest mean for high violations?
-# Which county has the lowest mean for total violations?
-# Which county has the lowest mean for high violations?
-# Which county has the most inspections per licensed restaurant? (Need data on licensed restaurants)
+# Which county has the most inspections per licensed restaurant?
 # Which county has the lowest inspections per licensed restaurant?
+# Which restaurants had no violations?
+# Which restaurants were shut down?
