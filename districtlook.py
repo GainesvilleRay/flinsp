@@ -7,6 +7,7 @@ import sys
 
 # installed with pip
 import pandas as pd
+import numpy as np
 
 # Create dataframe from files
 colnames = [
@@ -90,6 +91,7 @@ df18_all = pd.concat(
 
 # How many counties are included in the dataframe
 co_count = len(list(df18_all.groupby(['county']).groups.keys()))
+
 print("There are " + str(co_count) + " counties in our dataframe.\n")
 
 # Which counties are included
@@ -104,25 +106,10 @@ def diff(co_inc, fl_counties):
     co_dif = [i for i in co_inc + fl_counties if i not in co_inc]
     return co_dif
 
-# Any counties missing?
 missing_counties = diff(co_inc, fl_counties)
+
 print("The ones not included are: " + str(', '.join(missing_counties)))
 print("But it's listed simply as Dade.")
-
-# How many rows in the dataframe (does that also mean how many inspections?)
-num_rows = list(df18_all.shape)
-print("\nThere are " + str(num_rows[0]) + " rows in our dataframe." +
-     " (Does that correspond to how many different inspections were made?)")
-
-# How many different restaurants were inspected?
-rest_count = len(pd.value_counts(df18_all['licid'].values, sort=False))
-print("\nThere were " + str(rest_count) + " different 'licid' numbers represented." +
-      " Does that mean how many different restaurants were inspected?.")
-
-# How many different inspections were made?
-insp_count = len(pd.value_counts(df18_all['visitid'].values, sort=False))
-print("\nThere were " + str(rest_count) + " different 'visitid' numbers." +
-      " Why is that the same as 'licid'?")
 
 # What was worst restaurant inspection in Florida for the year?
 # The most total violations:
@@ -130,58 +117,64 @@ most_vios = df18_all.loc[df18_all['totalvio'].idxmax()]
 print('\nThe restaurant with the most total violations last year was:')
 print(most_vios.iloc[2] + ", " + most_vios.iloc[3] + ", " + most_vios.iloc[4] +
       ", in " + most_vios.iloc[0] + " County, on " + most_vios.iloc[9] + ".")
-print("It had " + str(most_vios.iloc[10]) + " total violations, including " +
-    str(most_vios.iloc[11]) + " high violations, " + str(most_vios.iloc[12]) +
-    " intermediate violations, and " +
-    str(most_vios.iloc[13]) + " basic violations.")
+print("It had " + str(most_vios.iloc[10]) + " total violations, including " + str(most_vios.iloc[11]) +
+     " high violations, " + str(most_vios.iloc[12]) + " intermediate violations, and " +
+     str(most_vios.iloc[13]) + " basic violations.")
 
 # The most 'high' violations:
 most_high_vios = df18_all.loc[df18_all['highvio'].idxmax()]
 print('\nThe restaurant with the most "high" violations last year was:')
-print(most_high_vios.iloc[2] + ", " + most_high_vios.iloc[3] + ", " +
-    most_high_vios.iloc[4] + ", in " + most_high_vios.iloc[0] + " County, on " +
-    most_high_vios.iloc[9] + ".")
-print("It had " + str(most_high_vios.iloc[10]) +
-    " total violations, including " + str(most_high_vios.iloc[11]) +
-    " high violations, " + str(most_high_vios.iloc[12]) +
-    " intermediate violations, and " + str(most_high_vios.iloc[13]) +
-    " basic violations.")
+print(most_high_vios.iloc[2] + ", " + most_high_vios.iloc[3] + ", " + most_high_vios.iloc[4] +
+      ", in " + most_high_vios.iloc[0] + " County, on " + most_high_vios.iloc[9] + ".")
+print("It had " + str(most_high_vios.iloc[10]) + " total violations, including " + str(most_high_vios.iloc[11]) +
+     " high violations, " + str(most_high_vios.iloc[12]) + " intermediate violations, and " +
+     str(most_high_vios.iloc[13]) + " basic violations.")
 
 # What is the mean of total violations statewide?
-mean_total_vios = df18_all['totalvio'].mean()
-print("\nThe statewide mean for total violations is " + str(mean_total_vios))
+mean_total_vios = round(df18_all['totalvio'].mean(),2) # rounded to two places
+print("\nThe mean of total violations per inspection statewide is: " +
+      str(mean_total_vios))
 
 # What is the mean of high violations statewide?
-mean_total_vios = df18_all['highvio'].mean()
-print("\nThe statewide mean for high violations is " + str(mean_total_vios))
+mean_high_vios = round(df18_all['highvio'].mean(),2) # rounded to two places
+print("\nThe mean of high violations per inspection statewide is: " +
+      str(mean_high_vios))
 
+# Which counties have the most & least violations?
+# Rather than simply sum them, we'll do this by finding the mean
+# for each county, and then seeing which are at least one standard
+# deviation away from the mean.
+
+# Mean violations grouped by county
+dfcm = df18_all.groupby('county').mean()
+
+# Looking at total violations
+dfcmt = dfcm[['totalvio']]
+dfcmt = dfcmt.sort_values(by=['totalvio'], axis=0, ascending=False)
+dfcmt_mean = round(float(dfcmt.mean()),2) # rounded to two places
+print("\nThe mean of total violations when grouped by county is: " +
+      str(dfcmt_mean))
+# Standard deviation from the grouped mean of total violations
+dfcmt_std = round(float(dfcmt.std()),2) # rounded to two places
+print("\nThe standard deviation from the mean for total violations grouped by county is: " +
+      str(dfcmt_std))
+
+"""
+# Looking at outliers: those a standard deviation from the mean
+# https://www.quora.com/How-do-I-subtract-the-mean-of-a-row-from-each-element-of-the-row-in-a-data-frame-in-Python-data-handling
+dfcmto = dfcmt.sub(dfcmt.mean(axis=1), axis=0)
+dfcmto = dfcmto.sort_values(by=['totalvio'], axis=0, ascending=True)
+dfcmto
+
+"""
+
+
+# What is the mean of total violations?
+# What is the mean of high violations?
 # What is the most common violation?
 # Which county has the highest mean for total violations?
 # Which county has the highest mean for high violations?
 # Which county has the lowest mean for total violations?
 # Which county has the lowest mean for high violations?
-# Which county has the most inspections per licensed restaurant?
-# (Need data on licensed restaurants)
+# Which county has the most inspections per licensed restaurant? (Need data on licensed restaurants)
 # Which county has the lowest inspections per licensed restaurant?
-
-# WAIT // THIS ISN'T RIGHT. I DIVIDED TOTAL VIOLATIONS BY NUMBER OF RESTAURANT
-# SHOULD HAVE BEEN BY NUMBER OF INSPECTIONS??
-
-# Which county has the highest mean for total violations?
-df18_totalvios = df18_all[['county', 'totalvio']]
-df18_totalvios = df18_totalvios.set_index('county')
-df18_totalvios = df18_totalvios.groupby('county').count()
-df18_totalvios = pd.concat([df18_totalvios, dfcount], axis=1, sort=True)
-df18_totalvios['avg'] = df18_totalvios['totalvio'] / df18_totalvios['count']
-df18_totalvios['mean'] = df18_totalvios.avg.mean()
-df18_totalvios['std'] = df18_totalvios.avg.std()
-df18_totalvios['outlier'] = df18_totalvios['std'] + df18_totalvios['mean'] - df18_totalvios['avg']
-df18_totalvios_outliers = df18_totalvios[df18_totalvios.outlier < 0]
-df18_totalvios = df18_totalvios.sort_values(by=['avg'], ascending=False)
-df18_totalvios_outliers = df18_totalvios[df18_totalvios.outlier < 0]
-total_outliers = list(df18_totalvios_outliers.index.values)
-# These are ranked counties above one standard deviation from the mean:
-print('\nThe counties as outliers for the most total violations are:' +
-      str(total_outliers
-
-df18_totalvios = df18_all[['county', 'totalvio', 'visitid']]
