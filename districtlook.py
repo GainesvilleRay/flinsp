@@ -1,3 +1,11 @@
+#!/usr/bin/python3.7
+
+"""
+Some code to look at restaurant inspection data in Florida.
+
+"""
+# Last updated 7/16/2019 by doug.ray@starbanner.com
+
 # built-in libraries
 import csv
 import datetime
@@ -111,6 +119,8 @@ missing_counties = diff(co_inc, fl_counties)
 print("The ones not included are: " + str(', '.join(missing_counties)))
 print("But it's listed simply as Dade.")
 
+print('-----------------------------------------------')
+
 # Which counties have the most & least violations?
 # Rather than simply sum them, we'll do this by finding the mean
 # for each county, and then seeing which are at least one standard
@@ -180,6 +190,8 @@ dfcmhog = dfcmhog.round(2)
 print("\nHere are the 'good' outliers, those with total violations below 1 standard deviation:")
 print(dfcmhog)
 
+print('-----------------------------------------------')
+
 # Let's look at the worst individual restaurants in the state
 print("\nLet's look at the worst individual restaurants in the state.")
 
@@ -220,14 +232,56 @@ print("\nThe standard deviation of high violations per inspection statewide is: 
       str(std_high_vios))
 print("(So there won't be any below 1 std!)")
 
+dfsh = df18_all[['sitename', 'highvio', 'streetaddy', 'county']]
+dfsh.set_index('sitename', inplace=True)
+worst_high_outliers = dfsh['highvio'] > 12
+dfsh = dfsh[worst_high_outliers]
+dfsh = dfsh.sort_values(by=['highvio'], axis=0, ascending=False)
+
+print("\nHere are the 'bad' outliers, those with high violations above 1 standard deviation:")
+
 worst_high_outliers = dfsh['highvio'] > 12
 dfsh = dfsh[worst_high_outliers]
 dfsh = dfsh.sort_values(by=['highvio'], axis=0, ascending=False)
 print("\nHere are the 'bad' outliers, those with high violations above 1 standard deviation:")
-dfsh
+print(dfsh)
 
+print('-----------------------------------------------')
+
+print("\nWhich county has the most inspections per licensed restaurant?")
+
+#colnames = ['county', 'licenses']
+#colnums = [0,1]
+#df_cntylic = pd.read_csv(
+#    'countcounty.csv',
+#    names=colnames,
+#    usecols=colnums,
+#    )
+
+df_cntylic = pd.read_csv('countycount.csv')
+
+dfci = df18_all.groupby('county').count()
+dfci = dfci[['licnum']].reset_index()
+
+
+result = pd.concat([df_cntylic, dfci], axis=1)
+result = result.drop(['Unnamed: 0', 'co_name'], axis=1)
+result = result[['county', 'licnum', 'lic_count']]
+result = result.rename(index=str, columns={'county': 'county', 'licnum': 'insp_count', 'lic_count': 'lic_count', 'ratio':'ratio'})
+result['ratio'] = result.insp_count / result.lic_count
+result = result.sort_values(by=['ratio'])
+most_inspected = result.sort_values(by=['ratio'], ascending=False).head(10)
+least_inspected = result.sort_values(by=['ratio'], ascending=True).head(10)
+
+print("\nThe least inspected were:")
+print(least_inspected)
+
+print("\nThe most inspected were:")
+print(most_inspected)
+
+print('-----------------------------------------------')
+
+# MORE QUESTIONS:
 # What is the most common violation?
-# Which county has the most inspections per licensed restaurant?
-# Which county has the lowest inspections per licensed restaurant?
 # Which restaurants had no violations?
 # Which restaurants were shut down?

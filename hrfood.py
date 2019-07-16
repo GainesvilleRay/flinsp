@@ -190,17 +190,15 @@ countydict = {
 
 s1 = pd.Series(countydict) # turn dict into series
 result = pd.concat([dfcounts, s1], axis=1, sort=True)
-result.rename(columns={0 : 'county'}, inplace=True)
-result = result.drop(['sitename', 'streetaddy', 'cityaddy', 'countynum'])
-result = result[result['county'] != 'Out of State']
-result = result[result['county'] != 'Unknown']
-result = result[result['county'] != 'Foreign']
-result = result[pd.notnull(result['county'])]
-result = result.set_index('county')
-result = result.astype(int)
+result.rename(columns={0 : 'co_name'}, inplace=True)
+result = result.drop(columns=['sitename', 'streetaddy', 'cityaddy'])
+result = result[result['co_name'] != 'Out of State']
+result = result[result['co_name'] != 'Unknown']
+result = result[result['co_name'] != 'Foreign']
+result = result[pd.notnull(result['co_name'])]
+result = result.rename(index=str, columns={'licnum': 'lic_count', 'co_name': 'co_name'})
+result['lic_count'] = result['lic_count'].astype(int)
 
-# make a dictionary
-cocountdict = result.to_dict()
 
 # write a csv
-result.to_csv('countycounty.csv')
+result.to_csv('countycount.csv')
