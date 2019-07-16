@@ -4,13 +4,13 @@ So far, the files here are:
 
 • districtlook.py -- Puts the csv data into a Pandas dataframe for analysis.
 
-• countycounty.csv -- how many licensed restaurants in each county in fy2018-19
+• countycount.csv -- how many licensed restaurants in each county in fy2018-19
 
 • countycodes.py -- dictionary of county names and code numbers
 
 • counties.txt -- list of all counties in Florida
 
-• hrfood.py -- a script to produce 
+• hrfood.py -- a script to produce countycount.csv
 
 • fy2016 -- directory of inspection data in FY2016-17
 
